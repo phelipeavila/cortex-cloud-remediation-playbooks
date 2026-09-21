@@ -1,0 +1,655 @@
+id: 0ab0d26b-37d1-48f9-8275-a97047bcb10b
+version: 40
+contentitemexportablefields:
+  contentitemfields:
+    packID: ""
+    packName: Prisma Cloud by Palo Alto Networks
+    itemVersion: 4.4.34
+    fromServerVersion: 5.0.0
+    toServerVersion: ""
+    definitionid: ""
+    prevname: ""
+    isoverridable: false
+    supportedModules: []
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ""
+  type: ""
+  name: ""
+name: '[GR][Azure][Dispatch] Misconfiguration'
+description: Routes Cortex Cloud Azure misconfiguration issues to the matching category
+  remediation playbook (Network, Compute, Identity, Data), based on inputs.ruleId.
+tags:
+- GR
+- Azure
+- Dispatch
+starttaskid: "0"
+tasks:
+  "0":
+    id: "0"
+    taskid: d4738021-e1b2-4d49-82f5-209afd9b0fbb
+    type: start
+    task:
+      id: d4738021-e1b2-4d49-82f5-209afd9b0fbb
+      version: -1
+      name: ""
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "1"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 770,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "1":
+    id: "1"
+    taskid: e436e18b-0245-4acf-8a3e-b494a2864a5b
+    type: condition
+    task:
+      id: e436e18b-0245-4acf-8a3e-b494a2864a5b
+      version: -1
+      name: Evaluate triggered rule
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      Compute:
+      - "8"
+      Data:
+      - "10"
+      Identity:
+      - "9"
+      Network:
+      - "7"
+    separatecontext: false
+    conditions:
+    - label: Network
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 0113c405-c954-4ace-9d94-f0e9728bdf03
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 0f7fb1e1-dc2b-431f-8dad-efdeae05ebcb
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 1fb5d1ac-17f1-43f1-8bf6-aa73005175b6
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 23c0c9e7-bef8-4c41-a9ec-b5b670667afa
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 3beed53c-3f2d-47b6-bb6f-95da39ff0f26
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 4f0dc13f-88d1-4820-8e9b-3e04779b0da9
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 543c664a-a50c-11e8-98d0-529269fb1459
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 5b2a3e46-799c-4ae7-b918-e4679ade50cb
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 5c1e59f6-2e1a-4d2e-8864-00a8365ac10a
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 63199794-1208-4e6b-aa02-c257f84a6e6b
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 65c342f9-1663-4114-bb70-f3ef303aa561
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 79428a6c-0c5b-42af-a1a5-2f287a984d91
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 7a4a4cb3-8584-4844-ae91-4db22d115cd5
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 840b475c-a50b-11e8-98d0-529269fb1459
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 8c36bb5c-2a53-4c58-97bf-2ccf2f4742fc
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: a36a7170-d628-47fe-aab2-0e734702373d
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: ae2e5e26-4f3b-4bd3-9a8f-93fc2794607c
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: b498a297-ae00-43ee-b767-d458785c7e00
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: c446ec59-db8f-47a1-ace1-cfe6cd366982
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: cb1fb96b-919f-4042-a745-cd070497f475
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: d148612d-6f2e-455a-89fc-a1e917fa715f
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: d979e41c-a50d-11e8-98d0-529269fb1459
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: e51a22c2-f8d1-4f12-86ad-f64751ba3406
+    - label: Compute
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 0649ae20-3c76-4134-851f-70a7b65c03ec
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 174428c5-b6fa-49fc-87cb-f9af04d5b55d
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 1feba014-ed3b-46ed-8a7c-4c03ec1469b7
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 2a377921-af8b-4c81-bba8-121f94b9ded4
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 82d945cb-49c0-4163-89ef-7ac3c194d4cb
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 91415843-d808-4c11-97cf-c66414c628b5
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: c6c62207-dbf7-45a1-b809-e1c896eb28fb
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: c82a5f89-cd01-4bcf-8fa3-99396a4c848d
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: e2b13b04-34b0-455d-8d50-8e01e5ae7947
+    - label: Identity
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: df4f009d-f049-4e04-bbdf-06d98b1b040f
+    - label: Data
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 04aaadfc-65e0-4347-9a3e-1922e9a2068e
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 499c23da-b67f-441a-81e3-9fc0fd05ea75
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 4a6a7642-06f0-4e51-aa79-a7c06afffdc5
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 50ba3795-c6c7-43f2-af00-5162cb1a14f3
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 5a772daf-17c0-4a20-a689-2b3ab3f33779
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 6a3ba52c-1a0e-4359-aba5-e417ca280270
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: af7266ac-1506-4251-9294-34c8b2f67ab5
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: c085d057-d5a4-4118-afdf-f653e6b47995
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: ef14d0a6-8ed0-4f7a-9877-15efa3194737
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 770,
+          "y": 235
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "6":
+    id: "6"
+    taskid: aa0555eb-be15-4d63-860f-471b007e9ab9
+    type: title
+    task:
+      id: aa0555eb-be15-4d63-860f-471b007e9ab9
+      version: -1
+      name: Done
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 770,
+          "y": 760
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "7":
+    id: "7"
+    taskid: c99294f9-42cd-4262-80bb-d40e003a54a8
+    type: playbook
+    task:
+      id: c99294f9-42cd-4262-80bb-d40e003a54a8
+      version: -1
+      name: '[GR][Azure][Remediation] Network'
+      playbookName: '[GR][Azure][Remediation] Network'
+      type: playbook
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "6"
+    separatecontext: true
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 360,
+          "y": 550
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "8":
+    id: "8"
+    taskid: 69e83a38-946d-44fa-8067-0b6be6122db3
+    type: playbook
+    task:
+      id: 69e83a38-946d-44fa-8067-0b6be6122db3
+      version: -1
+      name: '[GR][Azure][Remediation] Compute'
+      playbookName: '[GR][Azure][Remediation] Compute'
+      type: playbook
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "6"
+    separatecontext: true
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 595.4295654296875,
+          "y": 449.0624694824219
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "9":
+    id: "9"
+    taskid: e4ac01a4-3c0c-41d1-82f0-6c7f19ac5870
+    type: playbook
+    task:
+      id: e4ac01a4-3c0c-41d1-82f0-6c7f19ac5870
+      version: -1
+      name: '[GR][Azure][Remediation] Identity'
+      playbookName: '[GR][Azure][Remediation] Identity'
+      type: playbook
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "6"
+    separatecontext: true
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 1000.7073974609375,
+          "y": 449.0624694824219
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "10":
+    id: "10"
+    taskid: c74e1e86-d9d3-49dd-868b-54737464544c
+    type: playbook
+    task:
+      id: c74e1e86-d9d3-49dd-868b-54737464544c
+      version: -1
+      name: '[GR][Azure][Remediation] Data'
+      playbookName: '[GR][Azure][Remediation] Data'
+      type: playbook
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "6"
+    separatecontext: true
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 1243.0706787109375,
+          "y": 550
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+outlinetasks: {}
+view: |-
+  {
+    "linkLabelsPosition": {
+      "1_10_Data": 0.9,
+      "1_7_Network": 0.9
+    },
+    "paper": {
+      "dimensions": {
+        "height": 770,
+        "width": 1263.0706787109375,
+        "x": 360,
+        "y": 50
+      }
+    }
+  }
+inputs:
+- key: ruleId
+  value:
+    simple: ${issue.ruleid}
+  required: true
+  description: Cortex Cloud rule Id.
+  playbookInputQuery: null
+- key: portNumber
+  value: {}
+  required: false
+  description: Port number.
+  playbookInputQuery: null
+- key: asset_data
+  value: {}
+  required: false
+  description: ""
+  playbookInputQuery: null
+inputSections:
+- inputs:
+  - ruleId
+  - portNumber
+  - asset_data
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs:
+  - incident.resourcename
+  name: General (Outputs group)
+  description: Generic group for outputs
+outputs:
+- contextPath: incident.resourcename
+  description: Security group name.
+  type: string
+sourceplaybookid: Prisma Cloud Dispatch - Azure Misconfiguration
+dirtyInputs: true
+adopted: true
+possibleresponses: []

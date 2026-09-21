@@ -1,0 +1,472 @@
+id: 9da57a45-773d-4d80-925a-eff2422891b1
+version: 5
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ''
+  type: ''
+  name: ''
+name: '[GR][AWS][Dispatch] Misconfiguration'
+description: Routes Cortex Cloud AWS misconfiguration issues to the matching category remediation playbook (Network, Compute, Identity, Data), based on inputs.ruleId.
+tags:
+- GR
+- AWS
+- Dispatch
+starttaskid: '0'
+outlinetasks: {}
+inputs:
+- key: ruleId
+  value:
+    simple: ${issue.ruleid}
+  required: true
+  description: Cortex Cloud rule Id.
+  playbookInputQuery: null
+inputSections:
+- inputs:
+  - ruleId
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs: []
+  name: General (Outputs group)
+  description: Generic group for outputs
+outputs: []
+dirtyInputs: true
+adopted: true
+possibleresponses: []
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 905,
+        "width": 1890,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
+tasks:
+  '0':
+    id: '0'
+    taskid: 302bc2b4-d14b-437b-87d3-c67a906e5c34
+    type: start
+    task:
+      id: 302bc2b4-d14b-437b-87d3-c67a906e5c34
+      version: -1
+      name: ''
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '1'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 770,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '1':
+    id: '1'
+    taskid: aa2edd07-82f3-4d4a-ba4c-d42d283db34a
+    type: condition
+    task:
+      id: aa2edd07-82f3-4d4a-ba4c-d42d283db34a
+      version: -1
+      name: Evaluate triggered rule
+      type: condition
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      Network:
+      - '2'
+      Compute:
+      - '3'
+      Identity:
+      - '4'
+      Data:
+      - '5'
+    separatecontext: false
+    conditions:
+    - label: Network
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 0351493c-9989-4b33-ad86-18dbe406e710
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 11743cd3-35e4-4639-91e1-bc87b52d4cf5
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 261ba538-fa6a-418c-b6de-441bb1d4e593
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 62c42bbc-1764-408f-814c-68d2b392af1f
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 8824de78-7e99-4ef2-9c3d-8110e12c7df7
+    - label: Compute
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 194dc989-ec4c-426c-826f-d7365d9a59ed
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 4b508cb7-9a42-4ad2-a2e3-ed3921e00015
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 577ef22c-f4c5-4a54-8aa0-cc6f58275777
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 81a2200a-c63e-4860-85a0-b54eaa581135
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 81c165ce-f66e-441a-8ea0-56a107175ccc
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 92a3fce2-0875-49da-af5c-71c3366100bf
+    - label: Identity
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 1e0076af-0ccd-4f1c-bba5-ac92964a5e6b
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 9a5813af-17a3-4058-be13-588ea00b4bfa
+    - label: Data
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 005ab558-f5e8-49e4-b472-7bad3f70987a
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 4db5ec62-c7cd-4725-adba-fdd30eb911a3
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 67dc23e7-e6db-4efb-b7e8-b4bd7778c891
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 7c714cb4-3d47-4c32-98d4-c13f92ce4ec5
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: a707de6a-11b7-478a-b636-5e21ee1f6162
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: b22df320-13e7-4108-8142-d1bd858b8d46
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: b3897fb4-5241-403b-8770-69f90cea0f11
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: b8e3f191-9cfb-4707-8a82-cb5f784f7694
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: d280f6cc-20ce-41e2-a29e-e23c6b3f8b6d
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: f79f0e00-fcf1-49ef-ab0c-b3db225b086d
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 770,
+          "y": 235
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '2':
+    id: '2'
+    taskid: 3bbf33e4-33bc-4c8b-90ae-2b348965b965
+    type: playbook
+    task:
+      id: 3bbf33e4-33bc-4c8b-90ae-2b348965b965
+      version: -1
+      name: '[GR][AWS][Remediation] Network'
+      playbookName: '[GR][AWS][Remediation] Network'
+      type: playbook
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '6'
+    separatecontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 420
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '3':
+    id: '3'
+    taskid: 0f7f8c9f-5b14-4dbd-9c22-d2d7ce334a1b
+    type: playbook
+    task:
+      id: 0f7f8c9f-5b14-4dbd-9c22-d2d7ce334a1b
+      version: -1
+      name: '[GR][AWS][Remediation] Compute'
+      playbookName: '[GR][AWS][Remediation] Compute'
+      type: playbook
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '6'
+    separatecontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 420
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '4':
+    id: '4'
+    taskid: e79cde70-27f7-4d54-ad08-3b2a715100a6
+    type: playbook
+    task:
+      id: e79cde70-27f7-4d54-ad08-3b2a715100a6
+      version: -1
+      name: '[GR][AWS][Remediation] Identity'
+      playbookName: '[GR][AWS][Remediation] Identity'
+      type: playbook
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '6'
+    separatecontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 1010,
+          "y": 420
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '5':
+    id: '5'
+    taskid: b6156a3f-a606-4cf6-977e-9c933e7d4ecc
+    type: playbook
+    task:
+      id: b6156a3f-a606-4cf6-977e-9c933e7d4ecc
+      version: -1
+      name: '[GR][AWS][Remediation] Data'
+      playbookName: '[GR][AWS][Remediation] Data'
+      type: playbook
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '6'
+    separatecontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 1490,
+          "y": 420
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '6':
+    id: '6'
+    taskid: b5346974-48fe-463b-84a4-85a2a25b0a47
+    type: title
+    task:
+      id: b5346974-48fe-463b-84a4-85a2a25b0a47
+      version: -1
+      name: Done
+      type: title
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false

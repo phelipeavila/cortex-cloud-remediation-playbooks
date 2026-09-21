@@ -1,0 +1,873 @@
+id: a3694ce3-cb75-4151-9f6f-aff302d064f3
+version: 1
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ''
+  type: ''
+  name: ''
+name: '[GR][AWS][Remediation] Data'
+description: Remediates AWS data-plane misconfiguration issues (EBS snapshots, RDS clusters/instances/snapshots, S3 buckets). (10 rules; see condition tasks for exact rule IDs).
+tags:
+- GR
+- AWS
+- Remediation
+- Data
+starttaskid: '0'
+outlinetasks: {}
+inputs:
+- key: ruleId
+  value:
+    simple: ${issue.ruleid}
+  required: true
+  description: Cortex Cloud rule Id.
+  playbookInputQuery: null
+outputs: []
+inputSections:
+- inputs:
+  - ruleId
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs: []
+  name: General (Outputs group)
+  description: Generic group for outputs
+dirtyInputs: true
+adopted: true
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 1460,
+        "width": 4770,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
+tasks:
+  '0':
+    id: '0'
+    taskid: 3221490d-2726-4c5d-9bbe-ee281de67bd0
+    type: start
+    task:
+      id: 3221490d-2726-4c5d-9bbe-ee281de67bd0
+      version: -1
+      name: ''
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '1'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 2210,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '1':
+    id: '1'
+    taskid: b848e34b-35a0-49d9-af2f-e79fc679c0fe
+    type: playbook
+    task:
+      id: b848e34b-35a0-49d9-af2f-e79fc679c0fe
+      version: -1
+      name: '[helper] get-asset-details'
+      playbookName: '[helper] get-asset-details'
+      type: playbook
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '2'
+    separatecontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 2210,
+          "y": 235
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '3':
+    id: '3'
+    taskid: 9a49f187-1ded-473f-a455-a25455ebcf35
+    type: regular
+    task:
+      id: 9a49f187-1ded-473f-a455-a25455ebcf35
+      version: -1
+      name: aws-ec2-snapshot-attribute-modify
+      description: Adds or removes permission settings for a specified snapshot.
+      script: AWS|||aws-ec2-snapshot-attribute-modify
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '13'
+      '#none#':
+      - '14'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      attribute:
+        simple: createVolumePermission
+      group:
+        simple: all
+      operation_type:
+        simple: remove
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+      snapshot_id:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.snapshot.snapshotId}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '4':
+    id: '4'
+    taskid: 224c5ef0-c815-432a-b871-e3e8cf9bb219
+    type: regular
+    task:
+      id: 224c5ef0-c815-432a-b871-e3e8cf9bb219
+      version: -1
+      name: aws-rds-db-cluster-modify
+      description: Modifies settings for an Amazon RDS DB cluster.
+      script: AWS|||aws-rds-db-cluster-modify
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '13'
+      '#none#':
+      - '14'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      db_cluster_identifier:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.DBClusterIdentifier}
+      enable_iam_database_authentication:
+        simple: 'true'
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '5':
+    id: '5'
+    taskid: fabe49cd-a85b-48da-924a-1867d51144c0
+    type: regular
+    task:
+      id: fabe49cd-a85b-48da-924a-1867d51144c0
+      version: -1
+      name: aws-rds-db-cluster-snapshot-attribute-modify
+      description: Modifies the attributes associated with a DB cluster snapshot.
+      script: AWS|||aws-rds-db-cluster-snapshot-attribute-modify
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '13'
+      '#none#':
+      - '14'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      attribute_name:
+        simple: restore
+      db_cluster_snapshot_identifier:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.DBClusterSnapshotIdentifier}
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+      values_to_remove:
+        simple: all
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1010,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '6':
+    id: '6'
+    taskid: 14a8383e-2cd1-4382-80d9-86051d046a3d
+    type: regular
+    task:
+      id: 14a8383e-2cd1-4382-80d9-86051d046a3d
+      version: -1
+      name: aws-rds-db-instance-modify (publicly accessible)
+      description: Modifies an existing Amazon RDS DB instance.
+      script: AWS|||aws-rds-db-instance-modify
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '13'
+      '#none#':
+      - '14'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      db_instance_identifier:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.DBInstanceIdentifier}
+      publicly_accessible:
+        simple: 'false'
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1490,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '7':
+    id: '7'
+    taskid: 4f1c3914-d5a1-40e7-81d1-d4c177bb0cb9
+    type: regular
+    task:
+      id: 4f1c3914-d5a1-40e7-81d1-d4c177bb0cb9
+      version: -1
+      name: aws-rds-db-instance-modify (IAM authentication)
+      description: Modifies an existing Amazon RDS DB instance.
+      script: AWS|||aws-rds-db-instance-modify
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '13'
+      '#none#':
+      - '14'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      db_instance_identifier:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.DBInstanceIdentifier}
+      enable_iam_database_authentication:
+        simple: 'true'
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1970,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '8':
+    id: '8'
+    taskid: 4a4ab1c0-9ae2-4762-962c-fb8197cf01a8
+    type: regular
+    task:
+      id: 4a4ab1c0-9ae2-4762-962c-fb8197cf01a8
+      version: -1
+      name: aws-rds-db-instance-modify (auto minor upgrade)
+      description: Modifies an existing Amazon RDS DB instance.
+      script: AWS|||aws-rds-db-instance-modify
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '13'
+      '#none#':
+      - '14'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      auto_minor_version_upgrade:
+        simple: 'true'
+      db_instance_identifier:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.DBInstanceIdentifier}
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 2450,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '9':
+    id: '9'
+    taskid: a1495202-0484-4138-8ca3-b02df90be73d
+    type: regular
+    task:
+      id: a1495202-0484-4138-8ca3-b02df90be73d
+      version: -1
+      name: aws-rds-db-snapshot-attribute-modify
+      description: Adds or removes permission for the specified AWS account ID to restore the specified DB snapshot.
+      script: AWS|||aws-rds-db-snapshot-attribute-modify
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '13'
+      '#none#':
+      - '14'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      attribute_name:
+        simple: restore
+      db_snapshot_identifier:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.Snapshot.DBSnapshotIdentifier}
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+      values_to_remove:
+        simple: all
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 2930,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '10':
+    id: '10'
+    taskid: 0f085eb8-9084-4c6e-b9bf-0d5045d02794
+    type: regular
+    task:
+      id: 0f085eb8-9084-4c6e-b9bf-0d5045d02794
+      version: -1
+      name: aws-s3-bucket-ownership-controls-put
+      description: Creates or modifies ownership controls for an Amazon S3 bucket.
+      script: AWS|||aws-s3-bucket-ownership-controls-put
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '13'
+      '#none#':
+      - '14'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      bucket:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.Properties.BucketName}
+      ownership_controls_rule:
+        simple: BucketOwnerEnforced
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 3410,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '11':
+    id: '11'
+    taskid: cdf55665-814a-49cb-a088-30cfd6e205d5
+    type: regular
+    task:
+      id: cdf55665-814a-49cb-a088-30cfd6e205d5
+      version: -1
+      name: aws-s3-bucket-acl-put
+      description: Sets the access control list (ACL) permissions for an existing Amazon S3 bucket.
+      script: AWS|||aws-s3-bucket-acl-put
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '13'
+      '#none#':
+      - '14'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      acl:
+        simple: private
+      bucket:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.Properties.BucketName}
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 3890,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '12':
+    id: '12'
+    taskid: bc49aa60-27cf-4ef1-a0c9-6cad9915376f
+    type: regular
+    task:
+      id: bc49aa60-27cf-4ef1-a0c9-6cad9915376f
+      version: -1
+      name: aws-s3-public-access-block-update
+      description: Creates or modifies the PublicAccessBlock configuration for an Amazon S3 bucket.
+      script: AWS|||aws-s3-public-access-block-update
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '13'
+      '#none#':
+      - '14'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      block_public_acls:
+        simple: 'true'
+      block_public_policy:
+        simple: 'true'
+      bucket:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.Properties.BucketName}
+      ignore_public_acls:
+        simple: 'true'
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+      restrict_public_buckets:
+        simple: 'true'
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 4370,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '2':
+    id: '2'
+    taskid: 192431bc-abbd-48af-9af9-480cfbab692a
+    type: condition
+    task:
+      id: 192431bc-abbd-48af-9af9-480cfbab692a
+      version: -1
+      name: Evaluate triggered rule
+      type: condition
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      EBS Snapshot Public:
+      - '3'
+      RDS Cluster IAM Auth:
+      - '4'
+      RDS Cluster Snapshot Public:
+      - '5'
+      RDS Instance Public:
+      - '6'
+      RDS Instance IAM Auth:
+      - '7'
+      RDS Instance Minor Upgrade:
+      - '8'
+      RDS Snapshot Public:
+      - '9'
+      S3 ACLs In Use:
+      - '10'
+      S3 Public Via ACL:
+      - '11'
+      S3 Block Public Access:
+      - '12'
+    separatecontext: false
+    conditions:
+    - label: EBS Snapshot Public
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 7c714cb4-3d47-4c32-98d4-c13f92ce4ec5
+    - label: RDS Cluster IAM Auth
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: f79f0e00-fcf1-49ef-ab0c-b3db225b086d
+    - label: RDS Cluster Snapshot Public
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 4db5ec62-c7cd-4725-adba-fdd30eb911a3
+    - label: RDS Instance Public
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: b3897fb4-5241-403b-8770-69f90cea0f11
+    - label: RDS Instance IAM Auth
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 005ab558-f5e8-49e4-b472-7bad3f70987a
+    - label: RDS Instance Minor Upgrade
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: d280f6cc-20ce-41e2-a29e-e23c6b3f8b6d
+    - label: RDS Snapshot Public
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: a707de6a-11b7-478a-b636-5e21ee1f6162
+    - label: S3 ACLs In Use
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: b8e3f191-9cfb-4707-8a82-cb5f784f7694
+    - label: S3 Public Via ACL
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 67dc23e7-e6db-4efb-b7e8-b4bd7778c891
+    - label: S3 Block Public Access
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: b22df320-13e7-4108-8142-d1bd858b8d46
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 2210,
+          "y": 420
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '13':
+    id: '13'
+    taskid: 514ffc8c-e325-40d9-b418-60ca3ac44db8
+    type: regular
+    task:
+      id: 514ffc8c-e325-40d9-b418-60ca3ac44db8
+      version: -1
+      name: get Issue Recommendations
+      description: Returns comprehensive recommendations for one or more issues, including remediation steps, playbook suggestions, and recommended quick actions.
+      script: Builtin|||getIssueRecommendations
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '15'
+    scriptarguments:
+      issue_ids:
+        simple: ${issue.id}
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 790
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '14':
+    id: '14'
+    taskid: 4a3e7eb4-e1f6-4ed9-ba74-d8a65c719280
+    type: regular
+    task:
+      id: 4a3e7eb4-e1f6-4ed9-ba74-d8a65c719280
+      version: -1
+      name: Set issue as fixed
+      description: commands.local.cmd.set.alert.status
+      script: Builtin|||setIssueStatus
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '16'
+    scriptarguments:
+      status:
+        simple: Resolved - Fixed
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 790
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '15':
+    id: '15'
+    taskid: 0749f167-9ef1-4112-b8eb-a4fd5eebe8e5
+    type: regular
+    task:
+      id: 0749f167-9ef1-4112-b8eb-a4fd5eebe8e5
+      version: -1
+      name: Manually update asset
+      description: ${Core.IssueRecommendations.Description}
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '16'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 975
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '16':
+    id: '16'
+    taskid: cbf9bc00-4e59-4083-b8ec-3205b78e16bf
+    type: title
+    task:
+      id: cbf9bc00-4e59-4083-b8ec-3205b78e16bf
+      version: -1
+      name: Done
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 1160
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false

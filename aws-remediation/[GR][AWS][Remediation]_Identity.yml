@@ -1,0 +1,401 @@
+id: b8933b74-f724-4f82-914d-a7afd757db70
+version: 1
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ''
+  type: ''
+  name: ''
+name: '[GR][AWS][Remediation] Identity'
+description: Remediates AWS identity misconfiguration issues (IAM account password policy). (2 rules; see condition tasks for exact rule IDs).
+tags:
+- GR
+- AWS
+- Remediation
+- Identity
+starttaskid: '0'
+outlinetasks: {}
+inputs:
+- key: ruleId
+  value:
+    simple: ${issue.ruleid}
+  required: true
+  description: Cortex Cloud rule Id.
+  playbookInputQuery: null
+outputs: []
+inputSections:
+- inputs:
+  - ruleId
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs: []
+  name: General (Outputs group)
+  description: Generic group for outputs
+dirtyInputs: true
+adopted: true
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 1460,
+        "width": 930,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
+tasks:
+  '0':
+    id: '0'
+    taskid: 96fdc698-673b-4094-a062-0145c9f06cd4
+    type: start
+    task:
+      id: 96fdc698-673b-4094-a062-0145c9f06cd4
+      version: -1
+      name: ''
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '1'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 290,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '1':
+    id: '1'
+    taskid: b510f04b-3757-4221-a927-12896c327c8a
+    type: playbook
+    task:
+      id: b510f04b-3757-4221-a927-12896c327c8a
+      version: -1
+      name: '[helper] get-asset-details'
+      playbookName: '[helper] get-asset-details'
+      type: playbook
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '2'
+    separatecontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 290,
+          "y": 235
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '3':
+    id: '3'
+    taskid: ec198bea-3ad4-4e33-926e-4c547cb32bf7
+    type: regular
+    task:
+      id: ec198bea-3ad4-4e33-926e-4c547cb32bf7
+      version: -1
+      name: aws-iam-account-password-policy-update (require numbers)
+      description: Creates or updates AWS account password policy.
+      script: AWS|||aws-iam-account-password-policy-update
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '5'
+      '#none#':
+      - '6'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      require_numbers:
+        simple: 'true'
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '4':
+    id: '4'
+    taskid: 206770ce-43b6-45e4-a230-4026c55c8b35
+    type: regular
+    task:
+      id: 206770ce-43b6-45e4-a230-4026c55c8b35
+      version: -1
+      name: aws-iam-account-password-policy-update (secure baseline)
+      description: Creates or updates AWS account password policy with a secure baseline.
+      script: AWS|||aws-iam-account-password-policy-update
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '5'
+      '#none#':
+      - '6'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      allow_users_to_change_password:
+        simple: 'true'
+      max_password_age:
+        simple: '90'
+      minimum_password_length:
+        simple: '14'
+      password_reuse_prevention:
+        simple: '24'
+      require_lowercase_characters:
+        simple: 'true'
+      require_numbers:
+        simple: 'true'
+      require_symbols:
+        simple: 'true'
+      require_uppercase_characters:
+        simple: 'true'
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '2':
+    id: '2'
+    taskid: 354c6bbb-11f6-43a2-bd2c-deedb079450f
+    type: condition
+    task:
+      id: 354c6bbb-11f6-43a2-bd2c-deedb079450f
+      version: -1
+      name: Evaluate triggered rule
+      type: condition
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      IAM Password No Number:
+      - '3'
+      IAM Password Unsecure:
+      - '4'
+    separatecontext: false
+    conditions:
+    - label: IAM Password No Number
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 9a5813af-17a3-4058-be13-588ea00b4bfa
+    - label: IAM Password Unsecure
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 1e0076af-0ccd-4f1c-bba5-ac92964a5e6b
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 290,
+          "y": 420
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '5':
+    id: '5'
+    taskid: f69db224-8d6f-4611-84f3-f924f1018e83
+    type: regular
+    task:
+      id: f69db224-8d6f-4611-84f3-f924f1018e83
+      version: -1
+      name: get Issue Recommendations
+      description: Returns comprehensive recommendations for one or more issues, including remediation steps, playbook suggestions, and recommended quick actions.
+      script: Builtin|||getIssueRecommendations
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '7'
+    scriptarguments:
+      issue_ids:
+        simple: ${issue.id}
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 790
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '6':
+    id: '6'
+    taskid: 5d7004bf-4ac6-4d92-a614-5110d1fd068d
+    type: regular
+    task:
+      id: 5d7004bf-4ac6-4d92-a614-5110d1fd068d
+      version: -1
+      name: Set issue as fixed
+      description: commands.local.cmd.set.alert.status
+      script: Builtin|||setIssueStatus
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '8'
+    scriptarguments:
+      status:
+        simple: Resolved - Fixed
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 790
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '7':
+    id: '7'
+    taskid: 320aed4b-137e-4556-a1fb-ad572b80954d
+    type: regular
+    task:
+      id: 320aed4b-137e-4556-a1fb-ad572b80954d
+      version: -1
+      name: Manually update asset
+      description: ${Core.IssueRecommendations.Description}
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '8'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 975
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '8':
+    id: '8'
+    taskid: 93287a3a-452c-4235-8d18-1b6c59f0d470
+    type: title
+    task:
+      id: 93287a3a-452c-4235-8d18-1b6c59f0d470
+      version: -1
+      name: Done
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 1160
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false

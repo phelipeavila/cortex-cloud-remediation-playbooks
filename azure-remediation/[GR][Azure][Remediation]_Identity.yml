@@ -1,0 +1,313 @@
+id: 0edd094e-7782-4437-835d-897dfb228e55
+version: 11
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ""
+  type: ""
+  name: ""
+name: '[GR][Azure][Remediation] Identity'
+tags:
+- GR
+- Azure
+- Remediation
+- Identity
+starttaskid: "0"
+tasks:
+  "0":
+    id: "0"
+    taskid: 67095a51-4bb4-42fc-8242-6adbaf46ed83
+    type: start
+    task:
+      id: 67095a51-4bb4-42fc-8242-6adbaf46ed83
+      version: -1
+      name: ""
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "1"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "1":
+    id: "1"
+    taskid: 159c6a0c-0352-458f-82f3-8d61268352db
+    type: playbook
+    task:
+      id: 159c6a0c-0352-458f-82f3-8d61268352db
+      version: -1
+      name: '[helper] get-asset-details'
+      playbookName: '[helper] get-asset-details'
+      type: playbook
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "3"
+    separatecontext: true
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 230
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "3":
+    id: "3"
+    taskid: 33ace292-343a-42d7-80fc-79b87dae7fad
+    type: condition
+    task:
+      id: 33ace292-343a-42d7-80fc-79b87dae7fad
+      version: -1
+      name: Azure Key Vault Purge protection is not enabled
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      "yes":
+      - "4"
+    separatecontext: false
+    conditions:
+    - label: "yes"
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: df4f009d-f049-4e04-bbdf-06d98b1b040f
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 424.09283447265625
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "4":
+    id: "4"
+    taskid: 01b432e6-0588-4376-9582-6f36af72d251
+    type: regular
+    task:
+      id: 01b432e6-0588-4376-9582-6f36af72d251
+      version: -1
+      name: azure-keyvault-vault-update
+      description: 'Updates a key vault in the specified subscription. The required
+        permissions are: Microsoft.KeyVault/vaults/read, Microsoft.KeyVault/vaults/write.'
+      script: Azure|||azure-keyvault-vault-update
+      type: regular
+      iscommand: true
+      brand: Azure
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "7"
+      '#none#':
+      - "5"
+    scriptarguments:
+      enable_purge_protection:
+        simple: "true"
+      resource_group_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.resourceGroup}
+      subscription_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      vault_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.name}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 620
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "5":
+    id: "5"
+    taskid: f6c647b1-97c3-41a0-9fc5-522b78996a0e
+    type: regular
+    task:
+      id: f6c647b1-97c3-41a0-9fc5-522b78996a0e
+      version: -1
+      name: setIssueStatus
+      description: commands.local.cmd.set.alert.status
+      script: Builtin|||setIssueStatus
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "6"
+    scriptarguments:
+      status:
+        simple: Resolved - Fixed
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 790
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "6":
+    id: "6"
+    taskid: 8d181084-7046-42a3-b22a-2a701f6db56a
+    type: title
+    task:
+      id: 8d181084-7046-42a3-b22a-2a701f6db56a
+      version: -1
+      name: Done
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 460,
+          "y": 1120
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "7":
+    id: "7"
+    taskid: 3aad693d-db37-4a93-9f44-4956856263b1
+    type: regular
+    task:
+      id: 3aad693d-db37-4a93-9f44-4956856263b1
+      version: -1
+      name: Manually update asset
+      description: |-
+        1. Log in to Azure portal
+        2. Navigate to 'Key vaults', and select the reported key vault from the list
+        3. Under 'Settings' select 'Properties'
+        4. For 'Purge protection' click on 'Enable Purge protection (enforce a mandatory retention period for deleted vaults and vault objects)'
+        5. Click on 'Save'
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "6"
+    separatecontext: false
+    sla:
+      minutes: 0
+      hours: 0
+      days: 0
+      weeks: 0
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 900,
+          "y": 780
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+outlinetasks: {}
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 1130,
+        "width": 830,
+        "x": 450,
+        "y": 50
+      }
+    }
+  }
+inputs:
+- key: ruleId
+  value:
+    simple: ${issue.ruleid}
+  required: false
+  description: ""
+  playbookInputQuery: null
+inputSections:
+- inputs:
+  - ruleId
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs: []
+  name: General (Outputs group)
+  description: Generic group for outputs
+outputs: []
+quiet: true
+dirtyInputs: true
+adopted: true
+possibleresponses: []

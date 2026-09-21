@@ -1,0 +1,380 @@
+id: 9a7dd5de-ea73-459f-8595-a4f476c9c254
+version: 16
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ""
+  type: ""
+  name: ""
+name: '[helper] get-asset-details'
+description: checks if there are only one asset linked to the context issue. If yes,
+  return its json details
+tags:
+- helper
+starttaskid: "0"
+tasks:
+  "0":
+    id: "0"
+    taskid: 93715cf7-4203-489e-8495-8bee7808f5a2
+    type: start
+    task:
+      id: 93715cf7-4203-489e-8495-8bee7808f5a2
+      version: -1
+      name: ""
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "1"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "1":
+    id: "1"
+    taskid: 1c8f8b44-4d22-4a35-a1d4-5f8f4f93168f
+    type: condition
+    task:
+      id: 1c8f8b44-4d22-4a35-a1d4-5f8f4f93168f
+      version: -1
+      name: Check if only one asset in issue
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      only one asset:
+      - "2"
+    separatecontext: false
+    conditions:
+    - label: only one asset
+      condition:
+      - - operator: isEqualNumber
+          left:
+            value:
+              complex:
+                root: issue
+                transformers:
+                - operator: getField
+                  args:
+                    field:
+                      value:
+                        simple: asset_ids
+                - operator: DedupBy
+                  args:
+                    keys: {}
+                - operator: count
+            iscontext: true
+          right:
+            value:
+              simple: "1"
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 230
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "2":
+    id: "2"
+    taskid: 3a7ed8d0-93e2-4ce2-b63b-fbd8f36e8c35
+    type: regular
+    task:
+      id: 3a7ed8d0-93e2-4ce2-b63b-fbd8f36e8c35
+      version: -1
+      name: Check index of loaded asset data
+      description: Set a value in context under the key you entered.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "3"
+    scriptarguments:
+      key:
+        simple: asset_index
+      value:
+        complex:
+          root: Core.CoreAsset.[]
+          accessor: xdm__asset__id
+          transformers:
+          - operator: indexOf
+            args:
+              fromLast: {}
+              item:
+                value:
+                  simple: issue.asset_ids.[0]
+                iscontext: true
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 410
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "3":
+    id: "3"
+    taskid: 227de8b8-bd5b-4df5-8073-77a1952e48fb
+    type: condition
+    task:
+      id: 227de8b8-bd5b-4df5-8073-77a1952e48fb
+      version: -1
+      name: Evaluate index
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      asset loaded:
+      - "7"
+      asset not loaded:
+      - "4"
+    separatecontext: false
+    conditions:
+    - label: asset not loaded
+      condition:
+      - - operator: isEqualNumber
+          left:
+            value:
+              simple: ${asset_index}
+            iscontext: true
+          right:
+            value:
+              simple: "-1"
+    - label: asset loaded
+      condition:
+      - - operator: isEqualNumber
+          left:
+            value:
+              simple: ${asset_index}
+            iscontext: true
+          right:
+            value:
+              simple: "-1"
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 570
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "4":
+    id: "4"
+    taskid: 0f9b6be2-5e95-4f0c-8952-3de22fb9ec65
+    type: regular
+    task:
+      id: 0f9b6be2-5e95-4f0c-8952-3de22fb9ec65
+      version: -1
+      name: core-get-asset-details
+      description: Get asset information.
+      script: Cortex Core - Platform|||core-get-asset-details
+      type: regular
+      iscommand: true
+      brand: Cortex Core - Platform
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "5"
+    scriptarguments:
+      asset_id:
+        simple: ${issue.asset_ids}
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 770
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "5":
+    id: "5"
+    taskid: 953c9226-7b95-4829-a388-8c5131cc4d84
+    type: regular
+    task:
+      id: 953c9226-7b95-4829-a388-8c5131cc4d84
+      version: -1
+      name: set index
+      description: Set a value in context under the key you entered.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "7"
+    scriptarguments:
+      key:
+        simple: asset_index
+      value:
+        simple: "0"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 920
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "6":
+    id: "6"
+    taskid: 66231691-fcdd-4db3-aff7-55d7a07590dc
+    type: title
+    task:
+      id: 66231691-fcdd-4db3-aff7-55d7a07590dc
+      version: -1
+      name: Done
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 870,
+          "y": 1260
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "7":
+    id: "7"
+    taskid: 24844ade-4e44-49dc-a392-85bb3ac1f971
+    type: regular
+    task:
+      id: 24844ade-4e44-49dc-a392-85bb3ac1f971
+      version: -1
+      name: set index
+      description: Set a value in context under the key you entered.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "6"
+    scriptarguments:
+      key:
+        simple: asset_data
+      value:
+        simple: ${Core.CoreAsset}
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 870,
+          "y": 1110
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+outlinetasks: {}
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 1270,
+        "width": 800,
+        "x": 450,
+        "y": 50
+      }
+    }
+  }
+inputs: []
+inputSections:
+- inputs: []
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs:
+  - asset_index
+  - asset_data
+  name: General (Outputs group)
+  description: Generic group for outputs
+outputs:
+- contextPath: asset_index
+  type: number
+- contextPath: asset_data
+  description: Asset additional information.
+dirtyInputs: true
+adopted: true
+possibleresponses: []

@@ -1,0 +1,1260 @@
+id: 3a06b4ec-1a7c-44c7-96da-e0d41628666f
+version: 1
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ''
+  type: ''
+  name: ''
+name: '[GR][AWS][Remediation] Network'
+description: Remediates AWS network misconfiguration issues (Security Group SSH/RDP/CIFS/unrestricted default SG, VPC subnet public IP assignment). (5 rules; see condition tasks for exact rule IDs).
+tags:
+- GR
+- AWS
+- Remediation
+- Network
+starttaskid: '0'
+outlinetasks: {}
+inputs:
+- key: ruleId
+  value:
+    simple: ${issue.ruleid}
+  required: true
+  description: Cortex Cloud rule Id.
+  playbookInputQuery: null
+outputs:
+- contextPath: incident.resourcename
+  description: Security group name.
+  type: string
+inputSections:
+- inputs:
+  - ruleId
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs:
+  - incident.resourcename
+  name: General (Outputs group)
+  description: Generic group for outputs
+dirtyInputs: true
+adopted: true
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 2570,
+        "width": 2370,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
+tasks:
+  '0':
+    id: '0'
+    taskid: 986b09f0-6937-47be-8b38-b4983942f47d
+    type: start
+    task:
+      id: 986b09f0-6937-47be-8b38-b4983942f47d
+      version: -1
+      name: ''
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '1'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 1010,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '1':
+    id: '1'
+    taskid: 731349aa-2f7e-420f-a58c-f951ca5a16a2
+    type: playbook
+    task:
+      id: 731349aa-2f7e-420f-a58c-f951ca5a16a2
+      version: -1
+      name: '[helper] get-asset-details'
+      playbookName: '[helper] get-asset-details'
+      type: playbook
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '2'
+    separatecontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 1010,
+          "y": 235
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '2':
+    id: '2'
+    taskid: a5735e82-ba75-448e-9822-0ee0b7db7ffb
+    type: condition
+    task:
+      id: a5735e82-ba75-448e-9822-0ee0b7db7ffb
+      version: -1
+      name: Evaluate triggered rule
+      type: condition
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      SSH (22):
+      - '3'
+      RDP (3389):
+      - '4'
+      CIFS (445):
+      - '5'
+      Default SG Unrestricted:
+      - '11'
+      VPC Subnet Public IP:
+      - '18'
+    separatecontext: false
+    conditions:
+    - label: SSH (22)
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 62c42bbc-1764-408f-814c-68d2b392af1f
+    - label: RDP (3389)
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 0351493c-9989-4b33-ad86-18dbe406e710
+    - label: CIFS (445)
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 261ba538-fa6a-418c-b6de-441bb1d4e593
+    - label: Default SG Unrestricted
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 8824de78-7e99-4ef2-9c3d-8110e12c7df7
+    - label: VPC Subnet Public IP
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 11743cd3-35e4-4639-91e1-bc87b52d4cf5
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 1010,
+          "y": 420
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '3':
+    id: '3'
+    taskid: 672d3f27-d207-471f-8e28-90c2048f6820
+    type: regular
+    task:
+      id: 672d3f27-d207-471f-8e28-90c2048f6820
+      version: -1
+      name: Set port (22)
+      description: Sets a value into the context with the given context key.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '6'
+    scriptarguments:
+      append:
+        simple: 'false'
+      key:
+        simple: port
+      stringify:
+        simple: 'true'
+      value:
+        simple: '22'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '4':
+    id: '4'
+    taskid: 3290566d-6528-4fab-88e4-9f50547bd7a4
+    type: regular
+    task:
+      id: 3290566d-6528-4fab-88e4-9f50547bd7a4
+      version: -1
+      name: Set port (3389)
+      description: Sets a value into the context with the given context key.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '6'
+    scriptarguments:
+      append:
+        simple: 'false'
+      key:
+        simple: port
+      stringify:
+        simple: 'true'
+      value:
+        simple: '3389'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '5':
+    id: '5'
+    taskid: 63ecbbb8-5ff3-4800-a5bc-e76f27d8950f
+    type: regular
+    task:
+      id: 63ecbbb8-5ff3-4800-a5bc-e76f27d8950f
+      version: -1
+      name: Set port (445)
+      description: Sets a value into the context with the given context key.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '6'
+    scriptarguments:
+      append:
+        simple: 'false'
+      key:
+        simple: port
+      stringify:
+        simple: 'true'
+      value:
+        simple: '445'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 1010,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '6':
+    id: '6'
+    taskid: a653ffca-f975-48dc-80b0-d596ef5d310a
+    type: regular
+    task:
+      id: a653ffca-f975-48dc-80b0-d596ef5d310a
+      version: -1
+      name: Set protocol (tcp)
+      description: Sets a value into the context with the given context key.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '7'
+    scriptarguments:
+      append:
+        simple: 'false'
+      key:
+        simple: protocol
+      stringify:
+        simple: 'true'
+      value:
+        simple: tcp
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 790
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '7':
+    id: '7'
+    taskid: 54bfc86e-35f6-4e02-9782-68bab078674c
+    type: regular
+    task:
+      id: 54bfc86e-35f6-4e02-9782-68bab078674c
+      version: -1
+      name: Find the offending rule (from_port)
+      description: Find the actual start of the port range of the offending, internet-exposed ingress rule (may be a single port or a range that contains the reported port).
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '8'
+    scriptarguments:
+      append:
+        simple: 'false'
+      key:
+        simple: ruleFromPort
+      stringify:
+        simple: 'true'
+      value:
+        complex:
+          root: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissions
+          filters:
+          - - operator: isEqualString
+              left:
+                value:
+                  simple: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissions.ipProtocol
+                iscontext: true
+              right:
+                value:
+                  simple: ${protocol}
+                iscontext: true
+          - - operator: lessThanOrEqual
+              left:
+                value:
+                  simple: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissions.fromPort
+                iscontext: true
+              right:
+                value:
+                  simple: ${port}
+                iscontext: true
+          - - operator: greaterThanOrEqual
+              left:
+                value:
+                  simple: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissions.toPort
+                iscontext: true
+              right:
+                value:
+                  simple: ${port}
+                iscontext: true
+          - - operator: isEqualString
+              left:
+                value:
+                  simple: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissions.ipv4Ranges.cidrIp
+                iscontext: true
+              right:
+                value:
+                  simple: 0.0.0.0/0
+          transformers:
+          - operator: getField
+            args:
+              field:
+                value:
+                  simple: fromPort
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 975
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '8':
+    id: '8'
+    taskid: 3441e0e9-8ae6-44d3-ba66-20a47f20254a
+    type: regular
+    task:
+      id: 3441e0e9-8ae6-44d3-ba66-20a47f20254a
+      version: -1
+      name: Find the offending rule (to_port)
+      description: Find the actual end of the port range of the offending, internet-exposed ingress rule (may be a single port or a range that contains the reported port).
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '9'
+    scriptarguments:
+      append:
+        simple: 'false'
+      key:
+        simple: ruleToPort
+      stringify:
+        simple: 'true'
+      value:
+        complex:
+          root: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissions
+          filters:
+          - - operator: isEqualString
+              left:
+                value:
+                  simple: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissions.ipProtocol
+                iscontext: true
+              right:
+                value:
+                  simple: ${protocol}
+                iscontext: true
+          - - operator: lessThanOrEqual
+              left:
+                value:
+                  simple: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissions.fromPort
+                iscontext: true
+              right:
+                value:
+                  simple: ${port}
+                iscontext: true
+          - - operator: greaterThanOrEqual
+              left:
+                value:
+                  simple: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissions.toPort
+                iscontext: true
+              right:
+                value:
+                  simple: ${port}
+                iscontext: true
+          - - operator: isEqualString
+              left:
+                value:
+                  simple: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissions.ipv4Ranges.cidrIp
+                iscontext: true
+              right:
+                value:
+                  simple: 0.0.0.0/0
+          transformers:
+          - operator: getField
+            args:
+              field:
+                value:
+                  simple: toPort
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 1160
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '9':
+    id: '9'
+    taskid: 9f0f7a1c-74a4-4ba8-889e-df329c0fcaaa
+    type: condition
+    task:
+      id: 9f0f7a1c-74a4-4ba8-889e-df329c0fcaaa
+      version: -1
+      name: Check rule open to internet
+      description: Verify the security group has an inbound rule open to the internet (0.0.0.0/0) for the given port/protocol.
+      type: condition
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#default#':
+      - '19'
+      'yes':
+      - '10'
+    separatecontext: false
+    conditions:
+    - label: 'yes'
+      condition:
+      - - operator: isNotEmpty
+          left:
+            value:
+              simple: ${ruleFromPort}
+            iscontext: true
+      - - operator: isNotEmpty
+          left:
+            value:
+              simple: ${ruleToPort}
+            iscontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 1345
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '10':
+    id: '10'
+    taskid: b4705aa9-303c-46c8-8063-761bab910405
+    type: regular
+    task:
+      id: b4705aa9-303c-46c8-8063-761bab910405
+      version: -1
+      name: Remove the offending security group rule
+      description: 'Revokes ingress rules in a security group. Required IAM permission: ec2:RevokeSecurityGroupIngress.'
+      script: AWS|||aws-ec2-security-group-ingress-revoke
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '19'
+      '#none#':
+      - '20'
+    scriptarguments:
+      account_id:
+        complex:
+          root: asset_data.xdm__asset__raw_fields
+          accessor: Platform Discovery
+          transformers:
+          - operator: getField
+            args:
+              field:
+                value:
+                  simple: securityGroupArn
+          - operator: RegexExtractAll
+            args:
+              error_if_no_match: {}
+              ignore_case:
+                value:
+                  simple: 'true'
+              multi_line: {}
+              period_matches_newline: {}
+              regex:
+                value:
+                  simple: 'arn:aws:ec2:[^:]*:(\d{12}):'
+              unpack_matches:
+                value:
+                  simple: 'true'
+      group_id:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.groupId}
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+      protocol:
+        simple: ${protocol}
+      from_port:
+        simple: ${ruleFromPort}
+      to_port:
+        simple: ${ruleToPort}
+      cidr:
+        simple: 0.0.0.0/0
+    separatecontext: false
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 1530
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+    continueonerror: true
+  '11':
+    id: '11'
+    taskid: 2ed04b22-6d8e-4c64-8cbe-c6b6ee46174c
+    type: condition
+    task:
+      id: 2ed04b22-6d8e-4c64-8cbe-c6b6ee46174c
+      version: -1
+      name: Check ingress open (all traffic)
+      description: Verify the default security group has an inbound rule allowing all protocols from the internet (0.0.0.0/0).
+      type: condition
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#default#':
+      - '14'
+      'yes':
+      - '12'
+    separatecontext: false
+    conditions:
+    - label: 'yes'
+      condition:
+      - - operator: isNotEmpty
+          left:
+            value:
+              complex:
+                root: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissions
+                filters:
+                - - operator: isEqualString
+                    left:
+                      value:
+                        simple: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissions.ipProtocol
+                      iscontext: true
+                    right:
+                      value:
+                        simple: '-1'
+                - - operator: isEqualString
+                    left:
+                      value:
+                        simple: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissions.ipv4Ranges.cidrIp
+                      iscontext: true
+                    right:
+                      value:
+                        simple: 0.0.0.0/0
+                transformers:
+                - operator: getField
+                  args:
+                    field:
+                      value:
+                        simple: ipProtocol
+            iscontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 1490,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '12':
+    id: '12'
+    taskid: a32e98fa-a780-46f2-9405-6261e8778485
+    type: regular
+    task:
+      id: a32e98fa-a780-46f2-9405-6261e8778485
+      version: -1
+      name: Remove the offending ingress rule (all traffic)
+      description: 'Revokes an ingress rule in a security group. Required IAM permission: ec2:RevokeSecurityGroupIngress.'
+      script: AWS|||aws-ec2-security-group-ingress-revoke
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '19'
+      '#none#':
+      - '13'
+    scriptarguments:
+      account_id:
+        complex:
+          root: asset_data.xdm__asset__raw_fields
+          accessor: Platform Discovery
+          transformers:
+          - operator: getField
+            args:
+              field:
+                value:
+                  simple: securityGroupArn
+          - operator: RegexExtractAll
+            args:
+              error_if_no_match: {}
+              ignore_case:
+                value:
+                  simple: 'true'
+              multi_line: {}
+              period_matches_newline: {}
+              regex:
+                value:
+                  simple: 'arn:aws:ec2:[^:]*:(\d{12}):'
+              unpack_matches:
+                value:
+                  simple: 'true'
+      group_id:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.groupId}
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+      protocol:
+        simple: '-1'
+      cidr:
+        simple: 0.0.0.0/0
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 790
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '13':
+    id: '13'
+    taskid: b16a9f44-ab68-474b-9011-6f290457ceaf
+    type: regular
+    task:
+      id: b16a9f44-ab68-474b-9011-6f290457ceaf
+      version: -1
+      name: Mark ingress rule as remediated
+      description: Sets a value into the context with the given context key.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '14'
+    scriptarguments:
+      append:
+        simple: 'false'
+      key:
+        simple: remediated
+      stringify:
+        simple: 'true'
+      value:
+        simple: 'true'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 975
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '14':
+    id: '14'
+    taskid: b4f207e6-d1a1-4c3b-aa08-c2a944f71af0
+    type: condition
+    task:
+      id: b4f207e6-d1a1-4c3b-aa08-c2a944f71af0
+      version: -1
+      name: Check egress open (all traffic)
+      description: Verify the default security group has an outbound rule allowing all protocols to the internet (0.0.0.0/0).
+      type: condition
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#default#':
+      - '17'
+      'yes':
+      - '15'
+    separatecontext: false
+    conditions:
+    - label: 'yes'
+      condition:
+      - - operator: isNotEmpty
+          left:
+            value:
+              complex:
+                root: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissionsEgress
+                filters:
+                - - operator: isEqualString
+                    left:
+                      value:
+                        simple: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissionsEgress.ipProtocol
+                      iscontext: true
+                    right:
+                      value:
+                        simple: '-1'
+                - - operator: isEqualString
+                    left:
+                      value:
+                        simple: asset_data.xdm__asset__raw_fields.Platform Discovery.ipPermissionsEgress.ipv4Ranges.cidrIp
+                      iscontext: true
+                    right:
+                      value:
+                        simple: 0.0.0.0/0
+                transformers:
+                - operator: getField
+                  args:
+                    field:
+                      value:
+                        simple: ipProtocol
+            iscontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 1160
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '15':
+    id: '15'
+    taskid: d7348aab-56dd-435a-93b3-739c8ed4f482
+    type: regular
+    task:
+      id: d7348aab-56dd-435a-93b3-739c8ed4f482
+      version: -1
+      name: Remove the offending egress rule (all traffic)
+      description: 'Revokes an egress rule in a security group. Required IAM permission: ec2:RevokeSecurityGroupEgress.'
+      script: AWS|||aws-ec2-security-group-egress-revoke
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '19'
+      '#none#':
+      - '16'
+    scriptarguments:
+      account_id:
+        complex:
+          root: asset_data.xdm__asset__raw_fields
+          accessor: Platform Discovery
+          transformers:
+          - operator: getField
+            args:
+              field:
+                value:
+                  simple: securityGroupArn
+          - operator: RegexExtractAll
+            args:
+              error_if_no_match: {}
+              ignore_case:
+                value:
+                  simple: 'true'
+              multi_line: {}
+              period_matches_newline: {}
+              regex:
+                value:
+                  simple: 'arn:aws:ec2:[^:]*:(\d{12}):'
+              unpack_matches:
+                value:
+                  simple: 'true'
+      group_id:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.groupId}
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+      protocol:
+        simple: '-1'
+      cidr:
+        simple: 0.0.0.0/0
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 1345
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '16':
+    id: '16'
+    taskid: fb148534-a68b-49f1-88d9-b090b1cd7e33
+    type: regular
+    task:
+      id: fb148534-a68b-49f1-88d9-b090b1cd7e33
+      version: -1
+      name: Mark egress rule as remediated
+      description: Sets a value into the context with the given context key.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '17'
+    scriptarguments:
+      append:
+        simple: 'false'
+      key:
+        simple: remediated
+      stringify:
+        simple: 'true'
+      value:
+        simple: 'true'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 1530
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '17':
+    id: '17'
+    taskid: 82d0cb3a-2ae8-4375-bdd0-033617be7609
+    type: condition
+    task:
+      id: 82d0cb3a-2ae8-4375-bdd0-033617be7609
+      version: -1
+      name: Any rule remediated?
+      description: Checks whether the ingress and/or egress unrestricted rule was found and removed.
+      type: condition
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#default#':
+      - '19'
+      'yes':
+      - '20'
+    separatecontext: false
+    conditions:
+    - label: 'yes'
+      condition:
+      - - operator: isNotEmpty
+          left:
+            value:
+              simple: ${remediated}
+            iscontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 1715
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '18':
+    id: '18'
+    taskid: b50c8396-23f0-4d44-836d-78a4947820e7
+    type: regular
+    task:
+      id: b50c8396-23f0-4d44-836d-78a4947820e7
+      version: -1
+      name: aws-ec2-subnet-attribute-modify
+      description: Modifies a subnet attribute.
+      script: AWS|||aws-ec2-subnet-attribute-modify
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '19'
+      '#none#':
+      - '20'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      map_public_ip_on_launch:
+        simple: 'false'
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+      subnet_id:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.subnetId}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1970,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '19':
+    id: '19'
+    taskid: 49234a07-eaf3-457b-87e3-4097871271a7
+    type: regular
+    task:
+      id: 49234a07-eaf3-457b-87e3-4097871271a7
+      version: -1
+      name: get Issue Recommendations
+      description: Returns comprehensive recommendations for one or more issues, including remediation steps, playbook suggestions, and recommended quick actions.
+      script: Builtin|||getIssueRecommendations
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '21'
+    scriptarguments:
+      issue_ids:
+        simple: ${issue.id}
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 1900
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '20':
+    id: '20'
+    taskid: ce173eb5-0aa7-49c6-9be0-7d0bf8918cee
+    type: regular
+    task:
+      id: ce173eb5-0aa7-49c6-9be0-7d0bf8918cee
+      version: -1
+      name: Set issue as fixed
+      description: commands.local.cmd.set.alert.status
+      script: Builtin|||setIssueStatus
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '22'
+    scriptarguments:
+      status:
+        simple: Resolved - Fixed
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 1900
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '21':
+    id: '21'
+    taskid: 1134da9d-fc61-454f-8a6f-74f7512e1c35
+    type: regular
+    task:
+      id: 1134da9d-fc61-454f-8a6f-74f7512e1c35
+      version: -1
+      name: Manually update asset
+      description: ${Core.IssueRecommendations.Description}
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '22'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 2085
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '22':
+    id: '22'
+    taskid: e602a6a5-14de-4549-a227-b8e96acff3ce
+    type: title
+    task:
+      id: e602a6a5-14de-4549-a227-b8e96acff3ce
+      version: -1
+      name: Done
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 2270
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false

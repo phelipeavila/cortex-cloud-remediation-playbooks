@@ -1,0 +1,631 @@
+id: 6b287063-3e4c-4491-9813-27661aff899f
+version: 1
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ''
+  type: ''
+  name: ''
+name: '[GR][AWS][Remediation] Compute'
+description: Remediates AWS compute misconfiguration issues (public AMI, EC2 IMDSv2, ECS container insights, EKS endpoint access, ELB cross-zone load balancing, Lambda function URL auth). (6 rules; see condition tasks for exact rule IDs).
+tags:
+- GR
+- AWS
+- Remediation
+- Compute
+starttaskid: '0'
+outlinetasks: {}
+inputs:
+- key: ruleId
+  value:
+    simple: ${issue.ruleid}
+  required: true
+  description: Cortex Cloud rule Id.
+  playbookInputQuery: null
+outputs: []
+inputSections:
+- inputs:
+  - ruleId
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs: []
+  name: General (Outputs group)
+  description: Generic group for outputs
+dirtyInputs: true
+adopted: true
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 1460,
+        "width": 2850,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
+tasks:
+  '0':
+    id: '0'
+    taskid: 05b5893e-f6c9-4eee-b337-34752b485d68
+    type: start
+    task:
+      id: 05b5893e-f6c9-4eee-b337-34752b485d68
+      version: -1
+      name: ''
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '1'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 1250,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '1':
+    id: '1'
+    taskid: 9c5121ff-8795-435c-9300-7154e99a9841
+    type: playbook
+    task:
+      id: 9c5121ff-8795-435c-9300-7154e99a9841
+      version: -1
+      name: '[helper] get-asset-details'
+      playbookName: '[helper] get-asset-details'
+      type: playbook
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '2'
+    separatecontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 1250,
+          "y": 235
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '3':
+    id: '3'
+    taskid: 7e62e25d-81ed-4b7f-bbf0-0b54606e7eb7
+    type: regular
+    task:
+      id: 7e62e25d-81ed-4b7f-bbf0-0b54606e7eb7
+      version: -1
+      name: aws-ec2-image-attribute-modify
+      description: Modifies a specific attribute of the specified AMI.
+      script: AWS|||aws-ec2-image-attribute-modify
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '9'
+      '#none#':
+      - '10'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      attribute:
+        simple: launchPermission
+      image_id:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.image.imageId}
+      operation_type:
+        simple: remove
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+      user_groups:
+        simple: all
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '4':
+    id: '4'
+    taskid: 18822c55-3ac5-4041-b547-c16042ea9cdf
+    type: regular
+    task:
+      id: 18822c55-3ac5-4041-b547-c16042ea9cdf
+      version: -1
+      name: aws-ec2-instance-metadata-options-modify
+      description: Modifies the EC2 instance metadata parameters on a running or stopped instance.
+      script: AWS|||aws-ec2-instance-metadata-options-modify
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '9'
+      '#none#':
+      - '10'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      http_tokens:
+        simple: required
+      instance_id:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.instanceId}
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '5':
+    id: '5'
+    taskid: 8f9bf5b6-4e37-4da5-8f7e-b5589dfb3771
+    type: regular
+    task:
+      id: 8f9bf5b6-4e37-4da5-8f7e-b5589dfb3771
+      version: -1
+      name: aws-ecs-cluster-settings-update
+      description: Updates the containerInsights setting of an ECS cluster.
+      script: AWS|||aws-ecs-cluster-settings-update
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '9'
+      '#none#':
+      - '10'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      cluster_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.clusterName}
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+      value:
+        simple: enabled
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1010,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '6':
+    id: '6'
+    taskid: 3ce26c26-0da9-4df1-b0b8-c3583d336252
+    type: regular
+    task:
+      id: 3ce26c26-0da9-4df1-b0b8-c3583d336252
+      version: -1
+      name: aws-eks-cluster-config-update
+      description: Updates an Amazon EKS cluster configuration. Enables private access and disables public access to the Kubernetes API server, so worker node <-> API server traffic stays within the VPC.
+      script: AWS|||aws-eks-cluster-config-update
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '9'
+      '#none#':
+      - '10'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      cluster_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.name}
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+      resources_vpc_config:
+        simple: '{"endpointPublicAccess": false, "endpointPrivateAccess": true}'
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1490,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '7':
+    id: '7'
+    taskid: a3f80158-74d1-4e2a-8e2f-c39734b90b70
+    type: regular
+    task:
+      id: a3f80158-74d1-4e2a-8e2f-c39734b90b70
+      version: -1
+      name: aws-elb-load-balancer-attributes-modify
+      description: Modifies attributes for a Classic Elastic Load Balancer.
+      script: AWS|||aws-elb-load-balancer-attributes-modify
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '9'
+      '#none#':
+      - '10'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      cross_zone_load_balancing_enabled:
+        simple: 'true'
+      load_balancer_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.LoadBalancerName}
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1970,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '8':
+    id: '8'
+    taskid: a082faff-9074-4d78-8a69-2351e28da850
+    type: regular
+    task:
+      id: a082faff-9074-4d78-8a69-2351e28da850
+      version: -1
+      name: aws-lambda-function-url-config-update
+      description: Updates the configuration for a Lambda function URL.
+      script: AWS|||aws-lambda-function-url-config-update
+      type: regular
+      iscommand: true
+      brand: AWS
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '9'
+      '#none#':
+      - '10'
+    scriptarguments:
+      account_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      auth_type:
+        simple: AWS_IAM
+      function_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.FunctionName}
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 2450,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '2':
+    id: '2'
+    taskid: 8c0b4802-01d0-46e0-9bd5-48a518b1328f
+    type: condition
+    task:
+      id: 8c0b4802-01d0-46e0-9bd5-48a518b1328f
+      version: -1
+      name: Evaluate triggered rule
+      type: condition
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      AMI Public:
+      - '3'
+      EC2 IMDSv2:
+      - '4'
+      ECS Container Insights:
+      - '5'
+      EKS Endpoint Public:
+      - '6'
+      ELB Cross-Zone:
+      - '7'
+      Lambda Function URL Auth:
+      - '8'
+    separatecontext: false
+    conditions:
+    - label: AMI Public
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 81a2200a-c63e-4860-85a0-b54eaa581135
+    - label: EC2 IMDSv2
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 81c165ce-f66e-441a-8ea0-56a107175ccc
+    - label: ECS Container Insights
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 577ef22c-f4c5-4a54-8aa0-cc6f58275777
+    - label: EKS Endpoint Public
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 4b508cb7-9a42-4ad2-a2e3-ed3921e00015
+    - label: ELB Cross-Zone
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 194dc989-ec4c-426c-826f-d7365d9a59ed
+    - label: Lambda Function URL Auth
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 92a3fce2-0875-49da-af5c-71c3366100bf
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 1250,
+          "y": 420
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '9':
+    id: '9'
+    taskid: 43fe5c9d-9fbd-414c-bf62-940c4f4e15cf
+    type: regular
+    task:
+      id: 43fe5c9d-9fbd-414c-bf62-940c4f4e15cf
+      version: -1
+      name: get Issue Recommendations
+      description: Returns comprehensive recommendations for one or more issues, including remediation steps, playbook suggestions, and recommended quick actions.
+      script: Builtin|||getIssueRecommendations
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '11'
+    scriptarguments:
+      issue_ids:
+        simple: ${issue.id}
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 790
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '10':
+    id: '10'
+    taskid: 80505212-442e-425d-b2d3-9d9ef8f7055d
+    type: regular
+    task:
+      id: 80505212-442e-425d-b2d3-9d9ef8f7055d
+      version: -1
+      name: Set issue as fixed
+      description: commands.local.cmd.set.alert.status
+      script: Builtin|||setIssueStatus
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '12'
+    scriptarguments:
+      status:
+        simple: Resolved - Fixed
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 790
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '11':
+    id: '11'
+    taskid: ed3e472b-813f-43ea-a9ad-a06959b2cb97
+    type: regular
+    task:
+      id: ed3e472b-813f-43ea-a9ad-a06959b2cb97
+      version: -1
+      name: Manually update asset
+      description: ${Core.IssueRecommendations.Description}
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '12'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 975
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '12':
+    id: '12'
+    taskid: bc8a1d08-1c6d-430c-bc62-425c9d260df6
+    type: title
+    task:
+      id: bc8a1d08-1c6d-430c-bc62-425c9d260df6
+      version: -1
+      name: Done
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 1160
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false

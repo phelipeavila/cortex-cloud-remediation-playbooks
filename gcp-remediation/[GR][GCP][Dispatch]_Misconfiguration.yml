@@ -1,0 +1,356 @@
+id: 104ab289-62a3-4e03-860d-36204b902a1e
+version: 1
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ''
+  type: ''
+  name: ''
+name: '[GR][GCP][Dispatch] Misconfiguration'
+description: Routes Cortex Cloud GCP misconfiguration issues to the matching category remediation playbook (Network, Compute, Data), based on inputs.ruleId.
+tags:
+- GR
+- GCP
+- Dispatch
+starttaskid: '0'
+outlinetasks: {}
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 905,
+        "width": 1410,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
+inputs:
+- key: ruleId
+  value:
+    simple: ${issue.ruleid}
+  required: true
+  description: ''
+  playbookInputQuery: null
+inputSections:
+- inputs:
+  - ruleId
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs: []
+  name: General (Outputs group)
+  description: Generic group for outputs
+outputs: []
+quiet: true
+dirtyInputs: true
+adopted: true
+possibleresponses: []
+tasks:
+  '0':
+    id: '0'
+    taskid: b8d02af1-89f8-4408-a64b-42c9bcc19f0a
+    type: start
+    task:
+      id: b8d02af1-89f8-4408-a64b-42c9bcc19f0a
+      version: -1
+      name: ''
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '1'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '1':
+    id: '1'
+    taskid: cc131d53-c97c-4e11-b231-fb0ee0ad8f8c
+    type: condition
+    task:
+      id: cc131d53-c97c-4e11-b231-fb0ee0ad8f8c
+      version: -1
+      name: Evaluate triggered rule
+      type: condition
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      Network:
+      - '2'
+      Compute:
+      - '3'
+      Data:
+      - '4'
+    separatecontext: false
+    conditions:
+    - label: Network
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: a1d88a90-aede-4678-8e01-6cc08074bcf5
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 34175634-0e4a-4e9d-9c77-0c75390b8bdc
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 49a154e8-6049-4317-bbb5-0c90cb078f94
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: ac2aef26-939c-40e9-9aae-2e9be6fd7d0a
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: c88e6b00-3e5f-4073-a091-e9be8747cf20
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 8a28c396-0a6f-4958-84e2-9c74c5911ae5
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 33142dd4-733b-44d1-8320-8ccacf39adf9
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 899e01c6-9092-44a8-ae43-1f8a891b01b6
+    - label: Compute
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 1bf2e381-28ab-4354-9f00-920d200be18f
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 8ae5d48f-8f65-4844-8f32-c83e1d6626ba
+    - label: Data
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 9f08e13c-cdd6-4ad1-89f5-ffef6a71e432
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 41f7a4b1-cad6-4fbf-b698-1fd11a8869a8
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: eddabf29-fa96-4e14-ab4d-74245824c212
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 235
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '2':
+    id: '2'
+    taskid: b03b53b0-6650-4f30-adb7-ebaadf12a064
+    type: playbook
+    task:
+      id: b03b53b0-6650-4f30-adb7-ebaadf12a064
+      version: -1
+      name: '[GR][GCP][Remediation] Network'
+      playbookName: '[GR][GCP][Remediation] Network'
+      type: playbook
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '5'
+    separatecontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 420
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '3':
+    id: '3'
+    taskid: 101a5349-32f4-47d6-a8f6-365f61f914f4
+    type: playbook
+    task:
+      id: 101a5349-32f4-47d6-a8f6-365f61f914f4
+      version: -1
+      name: '[GR][GCP][Remediation] Compute'
+      playbookName: '[GR][GCP][Remediation] Compute'
+      type: playbook
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '5'
+    separatecontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 420
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '4':
+    id: '4'
+    taskid: 96b8c071-c8bd-4de2-8edb-de5ff615144b
+    type: playbook
+    task:
+      id: 96b8c071-c8bd-4de2-8edb-de5ff615144b
+      version: -1
+      name: '[GR][GCP][Remediation] Data'
+      playbookName: '[GR][GCP][Remediation] Data'
+      type: playbook
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '5'
+    separatecontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 1010,
+          "y": 420
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '5':
+    id: '5'
+    taskid: add33f1c-9c65-44e6-8cdc-7d9cdf176791
+    type: title
+    task:
+      id: add33f1c-9c65-44e6-8cdc-7d9cdf176791
+      version: -1
+      name: Done
+      type: title
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false

@@ -1,0 +1,722 @@
+id: e8392bab-d78e-4370-8ab6-a72e8d5a1be7
+version: 11
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ""
+  type: ""
+  name: ""
+name: '[GR][Azure][Remediation] Compute'
+tags:
+- GR
+- Azure
+- Remediation
+- Compute
+starttaskid: "0"
+tasks:
+  "0":
+    id: "0"
+    taskid: 25fafa4a-6028-4b5f-8624-fecbb5809f3a
+    type: start
+    task:
+      id: 25fafa4a-6028-4b5f-8624-fecbb5809f3a
+      version: -1
+      name: ""
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "1"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 510,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "1":
+    id: "1"
+    taskid: 98bd36a5-3c56-4c21-8dbe-7ae3d425e76e
+    type: playbook
+    task:
+      id: 98bd36a5-3c56-4c21-8dbe-7ae3d425e76e
+      version: -1
+      name: '[helper] get-asset-details'
+      playbookName: '[helper] get-asset-details'
+      type: playbook
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "2"
+    separatecontext: true
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": -930,
+          "y": 330
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "2":
+    id: "2"
+    taskid: c82b8b97-8844-4789-bcf4-3ac6df55421d
+    type: condition
+    task:
+      id: c82b8b97-8844-4789-bcf4-3ac6df55421d
+      version: -1
+      name: Evaluate triggered rule
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      ACR ARM Audience Token Auth:
+      - "6"
+      ACR Exports Enabled:
+      - "13"
+      ACR with anonymous auth:
+      - "3"
+      Function App Managed Identity:
+      - "8"
+      Function App TLS Version:
+      - "7"
+      HTTPS Redirect:
+      - "4"
+      Remote debugging:
+      - "5"
+    separatecontext: false
+    conditions:
+    - label: ACR with anonymous auth
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: e2b13b04-34b0-455d-8d50-8e01e5ae7947
+    - label: HTTPS Redirect
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: c6c62207-dbf7-45a1-b809-e1c896eb28fb
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 82d945cb-49c0-4163-89ef-7ac3c194d4cb
+        - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 2a377921-af8b-4c81-bba8-121f94b9ded4
+    - label: Remote debugging
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 1feba014-ed3b-46ed-8a7c-4c03ec1469b7
+    - label: ACR ARM Audience Token Auth
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 174428c5-b6fa-49fc-87cb-f9af04d5b55d
+    - label: ACR Exports Enabled
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 91415843-d808-4c11-97cf-c66414c628b5
+    - label: Function App TLS Version
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: c82a5f89-cd01-4bcf-8fa3-99396a4c848d
+    - label: Function App Managed Identity
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 0649ae20-3c76-4134-851f-70a7b65c03ec
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": -930,
+          "y": 670
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "3":
+    id: "3"
+    taskid: c5a0fbc7-f482-4e9f-89b7-50ef52d94eca
+    type: regular
+    task:
+      id: c5a0fbc7-f482-4e9f-89b7-50ef52d94eca
+      version: -1
+      name: azure-cr-registry-update
+      description: 'Updates a container registry. Required permissions: Microsoft.ContainerRegistry/registries/read,
+        Microsoft.ContainerRegistry/registries/write.'
+      script: Azure|||azure-cr-registry-update
+      type: regular
+      iscommand: true
+      brand: Azure
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "9"
+      '#none#':
+      - "10"
+    scriptarguments:
+      anonymous_pull_enabled:
+        simple: "false"
+      registry_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.name}
+      resource_group_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.resourceGroup}
+      subscription_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": -180,
+          "y": 670
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "4":
+    id: "4"
+    taskid: 7d576b2e-ef2b-40e9-839c-b44b7019c75c
+    type: regular
+    task:
+      id: 7d576b2e-ef2b-40e9-839c-b44b7019c75c
+      version: -1
+      name: azure-appservice-webapp-update (HTTPS redirect)
+      description: 'Updates an Azure Web App. The required permissions are: Microsoft.Web/sites/read,
+        Microsoft.Web/sites/write.'
+      script: Azure|||azure-appservice-webapp-update
+      type: regular
+      iscommand: true
+      brand: Azure
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "9"
+      '#none#':
+      - "10"
+    scriptarguments:
+      https_only:
+        simple: "true"
+      name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.name}
+      resource_group_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.resourceGroup}
+      subscription_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": -180,
+          "y": 1210
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "5":
+    id: "5"
+    taskid: cf13ff83-285e-4c7c-9b3e-56b834ab3df9
+    type: regular
+    task:
+      id: cf13ff83-285e-4c7c-9b3e-56b834ab3df9
+      version: -1
+      name: azure-appservice-webapp-config-update (remote debugging)
+      description: 'Updates the configuration settings of an existing Azure Web App.
+        Required permissions: Microsoft.Web/sites/config/write, Microsoft.Web/sites/config/read.'
+      script: Azure|||azure-appservice-webapp-config-update
+      type: regular
+      iscommand: true
+      brand: Azure
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "9"
+      '#none#':
+      - "10"
+    scriptarguments:
+      name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.name}
+      remote_debugging_enabled:
+        simple: "false"
+      resource_group_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.resourceGroup}
+      subscription_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": -190,
+          "y": 1530
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "6":
+    id: "6"
+    taskid: 4997242a-e6c7-4c39-a77b-f0962dba7e07
+    type: regular
+    task:
+      id: 4997242a-e6c7-4c39-a77b-f0962dba7e07
+      version: -1
+      name: azure-cr-registry-update
+      description: 'Updates a container registry. Required permissions: Microsoft.ContainerRegistry/registries/read,
+        Microsoft.ContainerRegistry/registries/write.'
+      script: Azure|||azure-cr-registry-update
+      type: regular
+      iscommand: true
+      brand: Azure
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "9"
+      '#none#':
+      - "10"
+    scriptarguments:
+      authentication_as_arm_policy:
+        simple: disabled
+      registry_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.name}
+      resource_group_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.resourceGroup}
+      subscription_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": -180,
+          "y": 1360
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "7":
+    id: "7"
+    taskid: 70395ff8-0e78-4348-8ddc-01cd61edb419
+    type: regular
+    task:
+      id: 70395ff8-0e78-4348-8ddc-01cd61edb419
+      version: -1
+      name: azure-appservice-webapp-config-update
+      description: 'Updates the configuration settings of an existing Azure Web App.
+        Required permissions: Microsoft.Web/sites/config/write, Microsoft.Web/sites/config/read.'
+      script: Azure|||azure-appservice-webapp-config-update
+      type: regular
+      iscommand: true
+      brand: Azure
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "9"
+      '#none#':
+      - "10"
+    scriptarguments:
+      min_tls_version:
+        simple: "1.3"
+      name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.name}
+      resource_group_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.resourceGroup}
+      subscription_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": -190,
+          "y": 860
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "8":
+    id: "8"
+    taskid: 1e1611af-baca-4288-b7a8-ca9c615f3911
+    type: regular
+    task:
+      id: 1e1611af-baca-4288-b7a8-ca9c615f3911
+      version: -1
+      name: azure-appservice-webapp-update
+      description: 'Updates an Azure Web App. The required permissions are: Microsoft.Web/sites/read,
+        Microsoft.Web/sites/write.'
+      script: Azure|||azure-appservice-webapp-update
+      type: regular
+      iscommand: true
+      brand: Azure
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "9"
+      '#none#':
+      - "10"
+    scriptarguments:
+      identity_type:
+        simple: SystemAssigned
+      name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.name}
+      resource_group_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.resourceGroup}
+      subscription_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": -190,
+          "y": 1030
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "9":
+    id: "9"
+    taskid: 1755e5d8-9bcf-404e-ac60-4de41adff9d8
+    type: regular
+    task:
+      id: 1755e5d8-9bcf-404e-ac60-4de41adff9d8
+      version: -1
+      name: get Issue Recommendations
+      description: Returns comprehensive recommendations for one or more issues, including
+        remediation steps, playbook suggestions, and recommended quick actions.
+      script: Builtin|||getIssueRecommendations
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "11"
+    scriptarguments:
+      issue_ids:
+        simple: ${issue.id}
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 710,
+          "y": 1530
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "10":
+    id: "10"
+    taskid: 3def8231-4fdd-47ee-a266-667353586649
+    type: regular
+    task:
+      id: 3def8231-4fdd-47ee-a266-667353586649
+      version: -1
+      name: Set issue as fixed
+      description: commands.local.cmd.set.alert.status
+      script: Builtin|||setIssueStatus
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "12"
+    scriptarguments:
+      status:
+        simple: Resolved - Fixed
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 730,
+          "y": 670
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "11":
+    id: "11"
+    taskid: 4e8984bf-99ea-4fcd-8209-6bd40cba32ee
+    type: regular
+    task:
+      id: 4e8984bf-99ea-4fcd-8209-6bd40cba32ee
+      version: -1
+      name: Manually update asset
+      description: ${Core.IssueRecommendations.Description}
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "12"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 710,
+          "y": 1670
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "12":
+    id: "12"
+    taskid: 209c855c-fd52-4754-b72a-853cc3d3b076
+    type: title
+    task:
+      id: 209c855c-fd52-4754-b72a-853cc3d3b076
+      version: -1
+      name: Done
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 1290,
+          "y": 1840
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "13":
+    id: "13"
+    taskid: 53199c0c-a5a7-4f36-a7bf-151191da5964
+    type: regular
+    task:
+      id: 53199c0c-a5a7-4f36-a7bf-151191da5964
+      version: -1
+      name: azure-cr-registry-update (exports)
+      description: 'Updates a container registry. Required permissions: Microsoft.ContainerRegistry/registries/read,
+        Microsoft.ContainerRegistry/registries/write.'
+      script: Azure|||azure-cr-registry-update
+      type: regular
+      iscommand: true
+      brand: Azure
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "9"
+      '#none#':
+      - "10"
+    scriptarguments:
+      allow_exports:
+        simple: disabled
+      registry_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.name}
+      resource_group_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.resourceGroup}
+      subscription_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": -180,
+          "y": 1700
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+outlinetasks: {}
+view: |-
+  {
+    "linkLabelsPosition": {
+      "2_4_HTTPS Redirect": 0.83,
+      "2_5_Remote debugging": 0.86,
+      "2_6_ACR ARM Audience Token Auth": 0.83,
+      "2_7_Function App TLS Version": 0.74,
+      "2_8_Function App Managed Identity": 0.79,
+      "3_9_#error#": 0.81,
+      "5_9_#error#": 0.74,
+      "6_9_#error#": 0.73,
+      "7_9_#error#": 0.74,
+      "8_9_#error#": 0.76
+    },
+    "paper": {
+      "dimensions": {
+        "height": 1850,
+        "width": 2600,
+        "x": -930,
+        "y": 50
+      }
+    }
+  }
+inputs:
+- key: ruleId
+  value:
+    simple: ${issue.ruleid}
+  required: true
+  description: ""
+  playbookInputQuery: null
+inputSections:
+- inputs:
+  - ruleId
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs: []
+  name: General (Outputs group)
+  description: Generic group for outputs
+outputs: []
+quiet: true
+dirtyInputs: true
+adopted: true
+possibleresponses: []

@@ -1,0 +1,488 @@
+id: c2d4a1b6-28cf-48db-b3ed-c585c7619ddf
+version: 1
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ''
+  type: ''
+  name: ''
+name: '[GR][GCP][Remediation] Data'
+description: Remediates GCP data misconfiguration issues (publicly accessible Storage buckets, by removing allUsers / allAuthenticatedUsers). (3 rules; see condition tasks for exact rule IDs).
+tags:
+- GR
+- GCP
+- Remediation
+- Data
+starttaskid: '0'
+outlinetasks: {}
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 1645,
+        "width": 1410,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
+inputs:
+- key: ruleId
+  value:
+    simple: ${issue.ruleid}
+  required: true
+  description: ''
+  playbookInputQuery: null
+inputSections:
+- inputs:
+  - ruleId
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs: []
+  name: General (Outputs group)
+  description: Generic group for outputs
+outputs: []
+quiet: true
+dirtyInputs: true
+adopted: true
+possibleresponses: []
+tasks:
+  '0':
+    id: '0'
+    taskid: 18a2eef7-746a-4287-a2e8-bca1ef8f7212
+    type: start
+    task:
+      id: 18a2eef7-746a-4287-a2e8-bca1ef8f7212
+      version: -1
+      name: ''
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '1'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '1':
+    id: '1'
+    taskid: 22091f3e-63f2-4ad9-9221-a505c139fb70
+    type: playbook
+    task:
+      id: 22091f3e-63f2-4ad9-9221-a505c139fb70
+      version: -1
+      name: '[helper] get-asset-details'
+      playbookName: '[helper] get-asset-details'
+      type: playbook
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '2'
+    separatecontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 235
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '2':
+    id: '2'
+    taskid: 47011fcd-70c1-4a87-abbf-3089960af5da
+    type: condition
+    task:
+      id: 47011fcd-70c1-4a87-abbf-3089960af5da
+      version: -1
+      name: Evaluate triggered rule
+      type: condition
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      Bucket public to all authenticated users:
+      - '3'
+      Bucket public to all users:
+      - '4'
+      Bucket with public logs:
+      - '5'
+    separatecontext: false
+    conditions:
+    - label: Bucket public to all authenticated users
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 9f08e13c-cdd6-4ad1-89f5-ffef6a71e432
+    - label: Bucket public to all users
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 41f7a4b1-cad6-4fbf-b698-1fd11a8869a8
+    - label: Bucket with public logs
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: eddabf29-fa96-4e14-ab4d-74245824c212
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 420
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '3':
+    id: '3'
+    taskid: 9c13d5b9-cf7f-4571-a6c9-ce3aa03e5921
+    type: regular
+    task:
+      id: 9c13d5b9-cf7f-4571-a6c9-ce3aa03e5921
+      version: -1
+      name: gcp-storage-bucket-policy-delete (allAuthenticatedUsers)
+      description: 'Removes an entity from a bucket''s Access Control List. Required permissions: storage.buckets.getIamPolicy, storage.buckets.setIamPolicy.'
+      script: GCP|||gcp-storage-bucket-policy-delete
+      type: regular
+      iscommand: true
+      brand: GCP
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '7'
+      '#none#':
+      - '8'
+    scriptarguments:
+      entity:
+        simple: allAuthenticatedUsers
+      project_id: &id001
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      resource_name: &id002
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.name}
+    separatecontext: false
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+    continueonerror: true
+  '4':
+    id: '4'
+    taskid: 093b21b6-f3cf-4eb0-bf43-ab8485d604a3
+    type: regular
+    task:
+      id: 093b21b6-f3cf-4eb0-bf43-ab8485d604a3
+      version: -1
+      name: gcp-storage-bucket-policy-delete (allUsers)
+      description: 'Removes an entity from a bucket''s Access Control List. Required permissions: storage.buckets.getIamPolicy, storage.buckets.setIamPolicy.'
+      script: GCP|||gcp-storage-bucket-policy-delete
+      type: regular
+      iscommand: true
+      brand: GCP
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '7'
+      '#none#':
+      - '8'
+    scriptarguments:
+      entity:
+        simple: allUsers
+      project_id: *id001
+      resource_name: *id002
+    separatecontext: false
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+    continueonerror: true
+  '5':
+    id: '5'
+    taskid: 1e9faa9a-dd96-4d72-9469-28001829afb9
+    type: regular
+    task:
+      id: 1e9faa9a-dd96-4d72-9469-28001829afb9
+      version: -1
+      name: gcp-storage-bucket-policy-delete (allUsers)
+      description: 'Removes an entity from a bucket''s Access Control List. Required permissions: storage.buckets.getIamPolicy, storage.buckets.setIamPolicy.'
+      script: GCP|||gcp-storage-bucket-policy-delete
+      type: regular
+      iscommand: true
+      brand: GCP
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '6'
+      '#none#':
+      - '6'
+    scriptarguments:
+      entity:
+        simple: allUsers
+      project_id: *id001
+      resource_name: *id002
+    separatecontext: false
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1010,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+    continueonerror: true
+  '6':
+    id: '6'
+    taskid: 8bb30f64-4cfe-4da5-bb8b-cb15e04dc0e7
+    type: regular
+    task:
+      id: 8bb30f64-4cfe-4da5-bb8b-cb15e04dc0e7
+      version: -1
+      name: gcp-storage-bucket-policy-delete (allAuthenticatedUsers)
+      description: 'Removes an entity from a bucket''s Access Control List. Required permissions: storage.buckets.getIamPolicy, storage.buckets.setIamPolicy.'
+      script: GCP|||gcp-storage-bucket-policy-delete
+      type: regular
+      iscommand: true
+      brand: GCP
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '7'
+      '#none#':
+      - '8'
+    scriptarguments:
+      entity:
+        simple: allAuthenticatedUsers
+      project_id: *id001
+      resource_name: *id002
+    separatecontext: false
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 790
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+    continueonerror: true
+  '7':
+    id: '7'
+    taskid: 4e6d6a4c-4aab-4403-9355-54aab5d2fda5
+    type: regular
+    task:
+      id: 4e6d6a4c-4aab-4403-9355-54aab5d2fda5
+      version: -1
+      name: get Issue Recommendations
+      description: Returns comprehensive recommendations for one or more issues, including remediation steps, playbook suggestions, and recommended quick actions.
+      script: Builtin|||getIssueRecommendations
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '9'
+    scriptarguments:
+      issue_ids:
+        simple: ${issue.id}
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 975
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '8':
+    id: '8'
+    taskid: e2152bb8-be71-43ef-953d-8c5d6e169461
+    type: regular
+    task:
+      id: e2152bb8-be71-43ef-953d-8c5d6e169461
+      version: -1
+      name: Set issue as fixed
+      description: commands.local.cmd.set.alert.status
+      script: Builtin|||setIssueStatus
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '10'
+    scriptarguments:
+      status:
+        simple: Resolved - Fixed
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 975
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '9':
+    id: '9'
+    taskid: 0d45b264-66f7-4fc0-bedc-0afeb4655faf
+    type: regular
+    task:
+      id: 0d45b264-66f7-4fc0-bedc-0afeb4655faf
+      version: -1
+      name: Manually update asset
+      description: ${Core.IssueRecommendations.Description}
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '10'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 1160
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '10':
+    id: '10'
+    taskid: 1e40284c-fc55-4ddf-a125-267c0fce2325
+    type: title
+    task:
+      id: 1e40284c-fc55-4ddf-a125-267c0fce2325
+      version: -1
+      name: Done
+      type: title
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 1345
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false

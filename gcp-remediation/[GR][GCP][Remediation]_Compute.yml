@@ -1,0 +1,352 @@
+id: 925dad81-cf4d-4913-b48b-1050ee96d65c
+version: 1
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ''
+  type: ''
+  name: ''
+name: '[GR][GCP][Remediation] Compute'
+description: Remediates GCP compute misconfiguration issues (GKE master authorized networks; VM project-wide SSH keys is manual). (2 rules; see condition tasks for exact rule IDs).
+tags:
+- GR
+- GCP
+- Remediation
+- Compute
+starttaskid: '0'
+outlinetasks: {}
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 1460,
+        "width": 930,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
+inputs:
+- key: ruleId
+  value:
+    simple: ${issue.ruleid}
+  required: true
+  description: ''
+  playbookInputQuery: null
+inputSections:
+- inputs:
+  - ruleId
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs: []
+  name: General (Outputs group)
+  description: Generic group for outputs
+outputs: []
+quiet: true
+dirtyInputs: true
+adopted: true
+possibleresponses: []
+tasks:
+  '0':
+    id: '0'
+    taskid: 4237c9f8-b127-4f6d-921a-ba304ee7512d
+    type: start
+    task:
+      id: 4237c9f8-b127-4f6d-921a-ba304ee7512d
+      version: -1
+      name: ''
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '1'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '1':
+    id: '1'
+    taskid: 56b2d7bf-60e8-477e-b967-d2124cce653e
+    type: playbook
+    task:
+      id: 56b2d7bf-60e8-477e-b967-d2124cce653e
+      version: -1
+      name: '[helper] get-asset-details'
+      playbookName: '[helper] get-asset-details'
+      type: playbook
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '2'
+    separatecontext: true
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 235
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '2':
+    id: '2'
+    taskid: f3258473-d54c-4f9a-a100-3c9e35988729
+    type: condition
+    task:
+      id: f3258473-d54c-4f9a-a100-3c9e35988729
+      version: -1
+      name: Evaluate triggered rule
+      type: condition
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      GKE master authorized networks:
+      - '3'
+      VM block project-wide SSH keys (manual):
+      - '4'
+    separatecontext: false
+    conditions:
+    - label: GKE master authorized networks
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 1bf2e381-28ab-4354-9f00-920d200be18f
+    - label: VM block project-wide SSH keys (manual)
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: inputs.ruleId
+            iscontext: true
+          right:
+            value:
+              simple: 8ae5d48f-8f65-4844-8f32-c83e1d6626ba
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 420
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '3':
+    id: '3'
+    taskid: e94bf996-b00f-4bac-bc97-c2da53c8323c
+    type: regular
+    task:
+      id: e94bf996-b00f-4bac-bc97-c2da53c8323c
+      version: -1
+      name: gcp-container-cluster-security-update (master authorized networks)
+      description: 'Configures security settings for GKE clusters, including access controls and visibility. Required permissions: container.clusters.update, container.clusters.get, container.clusters.list.'
+      script: GCP|||gcp-container-cluster-security-update
+      type: regular
+      iscommand: true
+      brand: GCP
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - '4'
+      '#none#':
+      - '5'
+    scriptarguments:
+      enable_master_authorized_networks:
+        simple: 'true'
+      project_id:
+        simple: ${asset_data.xdm__asset__cloud__account__id}
+      region:
+        simple: ${asset_data.xdm__asset__cloud__region}
+      resource_name:
+        simple: ${asset_data.xdm__asset__raw_fields.Platform Discovery.name}
+    separatecontext: false
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 605
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+    continueonerror: true
+  '4':
+    id: '4'
+    taskid: 50d48f42-f816-46a8-9b3c-d62b36e4b280
+    type: regular
+    task:
+      id: 50d48f42-f816-46a8-9b3c-d62b36e4b280
+      version: -1
+      name: get Issue Recommendations
+      description: Returns comprehensive recommendations for one or more issues, including remediation steps, playbook suggestions, and recommended quick actions.
+      script: Builtin|||getIssueRecommendations
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '6'
+    scriptarguments:
+      issue_ids:
+        simple: ${issue.id}
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 790
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '5':
+    id: '5'
+    taskid: b6c7c2b1-3c02-4e15-b858-568e71eaab88
+    type: regular
+    task:
+      id: b6c7c2b1-3c02-4e15-b858-568e71eaab88
+      version: -1
+      name: Set issue as fixed
+      description: commands.local.cmd.set.alert.status
+      script: Builtin|||setIssueStatus
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '7'
+    scriptarguments:
+      status:
+        simple: Resolved - Fixed
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 530,
+          "y": 790
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '6':
+    id: '6'
+    taskid: cfd41a97-6549-4505-b0ea-9a838bf92b5a
+    type: regular
+    task:
+      id: cfd41a97-6549-4505-b0ea-9a838bf92b5a
+      version: -1
+      name: Manually update asset
+      description: ${Core.IssueRecommendations.Description}
+      type: regular
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - '7'
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 975
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  '7':
+    id: '7'
+    taskid: 9ccbcea8-b6a7-409c-8dd6-9898cd5831a9
+    type: title
+    task:
+      id: 9ccbcea8-b6a7-409c-8dd6-9898cd5831a9
+      version: -1
+      name: Done
+      type: title
+      iscommand: false
+      brand: ''
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ''
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 1160
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false

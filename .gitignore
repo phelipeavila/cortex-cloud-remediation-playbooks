@@ -1,0 +1,4 @@
+resume-claude.txt
+*.bak
+*.orig
+__pycache__/
